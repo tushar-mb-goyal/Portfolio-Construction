@@ -1,3 +1,4 @@
+#os.chdir('C:\\Tushar\\Imperial MFE\\Github\\')
 import math 
 import numpy as np
 import yfinance as yf
