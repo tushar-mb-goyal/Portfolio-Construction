@@ -1,4 +1,3 @@
-#os.chdir('C:\\Tushar\\Imperial MFE\\Github\\')
 import math 
 import numpy as np
 import yfinance as yf
@@ -41,7 +40,7 @@ def portfolio_vol(weights, covmat):
 (uses sample expected returns for the analysis which is not a good estimation parameter)"""
 
 
-def optimal_weights_for_max_sharpe_ratio(risk_free_rate, returns, period_freq):
+def optimal_weights_for_max_sharpe_ratio(risk_free_rate, returns, period_freq, short=False):
     """
     Returns the max_sharpe_ratio that can be achieved given a set of expected returns and a covariance matrix
     """
@@ -49,7 +48,10 @@ def optimal_weights_for_max_sharpe_ratio(risk_free_rate, returns, period_freq):
     cov=returns.cov()
     n = er.shape[0]
     init_guess = np.repeat(1/n, n)
-    bounds = ((0.0, 1.0),) * n # an N-tuple of 2-tuples!
+    if (short==True):
+        bounds = ((-1.0, 1.0),) * n
+    else:
+        bounds = ((0.0, 1.0),) * n # an N-tuple of 2-tuples!
     # construct the constraints
     weights_sum_to_1 = {'type': 'eq',
                         'fun': lambda weights: np.sum(weights) - 1
@@ -77,7 +79,7 @@ def optimal_weights_for_max_sharpe_ratio(risk_free_rate, returns, period_freq):
     This portfolio is called Equally Weighted (EW) prtfolio or Naive Diversification Portfolio
     """
 
-def optimal_weights_for_gmv(returns, period_freq):
+def optimal_weights_for_gmv(returns, period_freq, short=False):
     """
     Returns the max_sharpe_ratio that can be achieved given a set of expected returns and a covariance matrix
     """
@@ -85,7 +87,10 @@ def optimal_weights_for_gmv(returns, period_freq):
     cov=returns.cov()
     n = er.shape[0]
     init_guess = np.repeat(1/n, n)
-    bounds = ((0.0, 1.0),) * n # an N-tuple of 2-tuples!
+    if (short==True):
+        bounds = ((-1.0, 1.0),) * n
+    else:
+        bounds = ((0.0, 1.0),) * n # an N-tuple of 2-tuples!
     # construct the constraints
     weights_sum_to_1 = {'type': 'eq',
                         'fun': lambda weights: np.sum(weights) - 1
@@ -111,7 +116,7 @@ def plot_two_asset_effiecient_frontier(n_points,returns, period_freq):
     ef=pd.DataFrame({'Portfolio Returns': ret,'Portfolio Risk': vol})
     return ef.plot.line(x='Portfolio Risk',y='Portfolio Returns',style='.-')
 
-def minimize_vol(target_return, returns, period_freq):
+def minimize_vol(target_return, returns, period_freq, short=False):
     """
     Returns the optimal weights that achieve the target return
     given a set of expected returns and a covariance matrix
@@ -120,7 +125,10 @@ def minimize_vol(target_return, returns, period_freq):
     cov=returns.cov()
     n = er.shape[0]
     init_guess = np.repeat(1/n, n)
-    bounds = ((0.0, 1.0),) * n # an N-tuple of 2-tuples!
+    if (short==True):
+        bounds = ((-1.0, 1.0),) * n
+    else:
+        bounds = ((0.0, 1.0),) * n # an N-tuple of 2-tuples!
     # construct the constraints
     weights_sum_to_1 = {'type': 'eq',
                         'fun': lambda weights: np.sum(weights) - 1
