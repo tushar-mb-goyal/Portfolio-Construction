@@ -22,3 +22,42 @@ def data_pandas_reader_dates(ticker_list,start,end,interval,field='Close',**kwar
         df=yf.download(asset,start,end,interval=interval)
         prices[asset]=df[field]
     return prices
+
+def ticker_info(ticker_list,field=['longName','shortName','industry','sector'],**kwargs):
+#    Valid Fields :  ['zip', 'sector', 'fullTimeEmployees', 'longBusinessSummary', 'city', 
+#    'phone', 'state', 'country', 'companyOfficers', 'website', 'maxAge', 'address1', 
+#    'industry', 'ebitdaMargins', 'profitMargins', 'grossMargins', 'operatingCashflow', 
+#    'revenueGrowth', 'operatingMargins', 'ebitda', 'targetLowPrice', 'recommendationKey', 
+#    'grossProfits', 'freeCashflow', 'targetMedianPrice', 'currentPrice', 'earningsGrowth', 
+#    'currentRatio', 'returnOnAssets', 'numberOfAnalystOpinions', 'targetMeanPrice', 'debtToEquity', 
+#    'returnOnEquity', 'targetHighPrice', 'totalCash', 'totalDebt', 'totalRevenue', 'totalCashPerShare', 
+#    'financialCurrency', 'revenuePerShare', 'quickRatio', 'recommendationMean', 'exchange', 'shortName', 
+#    'longName', 'exchangeTimezoneName', 'exchangeTimezoneShortName', 'isEsgPopulated', 'gmtOffSetMilliseconds', 
+#    'quoteType', 'symbol', 'messageBoardId', 'market', 'annualHoldingsTurnover', 'enterpriseToRevenue', 
+#    'beta3Year', 'enterpriseToEbitda', '52WeekChange', 'morningStarRiskRating', 'forwardEps', 
+#    'revenueQuarterlyGrowth', 'sharesOutstanding', 'fundInceptionDate', 'annualReportExpenseRatio', 
+#    'totalAssets', 'bookValue', 'sharesShort', 'sharesPercentSharesOut', 'fundFamily', 'lastFiscalYearEnd', 
+#    'heldPercentInstitutions', 'netIncomeToCommon', 'trailingEps', 'lastDividendValue', 'SandP52WeekChange',
+#    'priceToBook', 'heldPercentInsiders', 'nextFiscalYearEnd', 'yield', 'mostRecentQuarter', 'shortRatio',
+#    'sharesShortPreviousMonthDate', 'floatShares', 'beta', 'enterpriseValue', 'priceHint', 
+#    'threeYearAverageReturn', 'lastSplitDate', 'lastSplitFactor', 'legalType', 'lastDividendDate',
+#    'morningStarOverallRating', 'earningsQuarterlyGrowth', 'priceToSalesTrailing12Months',
+#    'dateShortInterest', 'pegRatio', 'ytdReturn', 'forwardPE', 'lastCapGain', 'shortPercentOfFloat', 
+#    'sharesShortPriorMonth', 'impliedSharesOutstanding', 'category', 'fiveYearAverageReturn', 'previousClose', 
+#    'regularMarketOpen', 'twoHundredDayAverage', 'trailingAnnualDividendYield', 'payoutRatio', 'volume24Hr',
+#    'regularMarketDayHigh', 'navPrice', 'averageDailyVolume10Day', 'regularMarketPreviousClose', 'fiftyDayAverage',
+#    'trailingAnnualDividendRate', 'open', 'toCurrency', 'averageVolume10days', 'expireDate', 'algorithm', 
+#    'dividendRate', 'exDividendDate', 'circulatingSupply', 'startDate', 'regularMarketDayLow', 'currency',
+#    'trailingPE', 'regularMarketVolume', 'lastMarket', 'maxSupply', 'openInterest', 'marketCap',
+#    'volumeAllCurrencies', 'strikePrice', 'averageVolume', 'dayLow', 'ask', 'askSize', 'volume', 
+#    'fiftyTwoWeekHigh', 'fromCurrency', 'fiveYearAvgDividendYield', 'fiftyTwoWeekLow', 'bid',
+#    'tradeable', 'dividendYield', 'bidSize', 'dayHigh', 'regularMarketPrice', 'logo_url']
+    information=pd.DataFrame(columns=field,index=ticker_list)
+    for asset in ticker_list:
+        ticker_info = yf.Ticker(asset)
+        for attrib in field:
+            try:
+                information[attrib].loc[asset]=ticker_info.info[attrib]
+            except: 
+                continue
+    return information
