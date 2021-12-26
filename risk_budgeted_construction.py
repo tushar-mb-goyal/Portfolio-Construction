@@ -28,10 +28,12 @@ def risk_budget_objective_error(weights, args):
     assets_risk_budget = args[1]
     weights=weights.reshape(-1,1)
     portfolio_vol = portfolio_risk(weights, assets_covar)
-    assets_risk_contribution=risk_contribution(weights, assets_covar)
-    assets_risk_target = np.multiply(portfolio_vol, assets_risk_budget)
-    error = float(sum(np.square(assets_risk_contribution - assets_risk_target)))
+    x=weights/portfolio_vol
+    error= 0.5*np.dot(x.T,np.dot(assets_covar,x))- np.dot(assets_risk_budget.T, np.log(x))
+    gradient=np.dot(assets_covar,x)-assets_risk_budget/x
+    hessian=assets_covar-np.diagflat(assets_risk_budget/(x*x))
     return error
+
 
 def risk_budgeted_backtest(risky_portfolio, safe_portfolio, risk_budget): 
     portfolio= risky_portfolio.merge(safe_portfolio,how='left',left_index=True, right_index=True)
